@@ -115,7 +115,7 @@ public class Simulateur_App {
     }
 
     public static void main(String[] args) throws Exception {
-
+        // Couplage Faible
           test2();
 
 
