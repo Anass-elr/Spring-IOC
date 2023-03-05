@@ -12,10 +12,11 @@ import metier.ICreditMetier;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class CreditContoleur {
+public class CreditContoleur implements IHM{
 
-    CreditMetier service;
+    ICreditMetier service;
 
+    @Override
     public void Afficher_mensualité(Long idCredit) throws Exception {
           var credit = service.calculer_Mensualite(idCredit);
           System.out.println(credit);

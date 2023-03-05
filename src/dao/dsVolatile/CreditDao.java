@@ -1,12 +1,14 @@
 package dao.dsVolatile;
+import dao.IDao;
 import modele.Credit;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CreditDao {
+public class CreditDao implements IDao<Credit,Long> {
 
+    @Override
     public Credit trouverParId(Long idCredit){
         System.out.println("[DAO -Ds Volatile]  trouver le Credit N : "+idCredit);
        return BD_Credit()
@@ -14,8 +16,6 @@ public class CreditDao {
                    .filter(Credit -> Credit.getID_ELRHAZI_ANASS() == idCredit)
                    .findFirst()
                    .orElse(null);
-
-
     }
 
     static Set<Credit> BD_Credit(){

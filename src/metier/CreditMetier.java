@@ -11,15 +11,13 @@ import modele.Credit;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class CreditMetier{
+public class CreditMetier implements ICreditMetier{
 
    // IDao<Credit,Long> dao;
-    CreditDao Creditdao;
-
-
+    IDao<Credit,Long> Creditdao;
+    @Override
     public Credit calculer_Mensualite(Long idCredit) throws Exception{
         var credit = Creditdao.trouverParId(idCredit);
-
 
         if(credit == null) throw new Exception("Credit non trouver");
         else{

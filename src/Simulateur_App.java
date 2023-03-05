@@ -2,8 +2,14 @@ import dao.IDao;
 import dao.dsVolatile.CreditDao;
 import metier.CreditMetier;
 import metier.ICreditMetier;
+import modele.Credit;
 import presentation.CreditContoleur;
+import presentation.IHM;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class Simulateur_App {
@@ -57,8 +63,62 @@ public class Simulateur_App {
      }
 
 
-    public static void main(String[] args) {
-        test1();
+     static IHM creditControleur;
+
+
+    static void test2() throws Exception {
+        String daoClass;
+        String serviceClass;
+        String controllerClass;
+
+        Properties properties = new Properties();
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream propertiesFile = classLoader.getResourceAsStream("config.properties");
+
+        if(propertiesFile == null) throw new Exception("Fichier Config Introuvable !!");
+        else {
+            try{
+                properties.load(propertiesFile);
+                daoClass = properties.getProperty("DAO");
+                serviceClass = properties.getProperty("SERVICE");
+                controllerClass = properties.getProperty("CONTROLLER");
+                propertiesFile.close();
+            }
+            catch (IOException e){
+                throw new Exception("PRB DE CHARGEMENT Des proprietés du fichier config");
+            }
+            finally {
+                properties.clear();
+            }
+        }
+        try{
+            Class cDao = Class.forName(daoClass);
+            Class cMetier = Class.forName(serviceClass);
+            Class cCont=Class.forName(controllerClass);
+
+            var dao = (IDao<Credit,Long>)cDao.getDeclaredConstructor().newInstance();
+            var metier = (ICreditMetier)cMetier.getDeclaredConstructor().newInstance();
+            creditControleur = (IHM)cCont.getDeclaredConstructor().newInstance();
+
+            Method setDao = cMetier.getMethod("setCreditdao",IDao.class);
+            setDao.invoke(metier,dao);
+
+            Method setMetier = cCont.getMethod("setService",ICreditMetier.class);
+            setMetier.invoke(creditControleur,metier);
+
+            creditControleur.Afficher_mensualité(3L);
+        }catch(Exception e){
+            e.printStackTrace();
+
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+
+          test2();
+
+
     }
 
 }

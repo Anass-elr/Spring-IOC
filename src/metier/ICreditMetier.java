@@ -4,5 +4,6 @@ import modele.Credit;
 
 public interface ICreditMetier {
 
-    Credit calculer_mensualite(Long idCredit);
+
+    Credit calculer_Mensualite(Long idCredit) throws Exception;
 }
